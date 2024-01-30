@@ -82,8 +82,9 @@ const markup = images.map(({ preview, original, description }) =>
 
 galleryList.innerHTML = markup;
 
-
 galleryList.addEventListener("click", openImg);
+
+let instance;
 
 function openImg(event) {
   event.preventDefault();
@@ -95,25 +96,20 @@ function openImg(event) {
   if (event.target.classList.contains('gallery-image')) {
   const largeImage = event.target.dataset.source;
 
-   const instance = basicLightbox.create(`
+instance = basicLightbox.create(`
     <img src="${largeImage}" alt="${images.description}"
     />`,
- {
-      onShow: () => {
-        document.addEventListener('keyup', closeModal);
-      },
-      
-      onClose: () => {
-        document.removeEventListener('keyup', closeModal);
-      },
-    }
   );
-  instance.show();
+    instance.show();
+
+    document.addEventListener('keydown', closeModal);
 } 
 };
 
 function closeModal(event) {
-  if (event.code === 'Escape') {
+  if (event.key === 'Escape') {
     instance.close();
+
+  document.removeEventListener('keydown', closeModal);
   }
 };
