@@ -94,22 +94,28 @@ function openImg(event) {
   }
   
   if (event.target.classList.contains('gallery-image')) {
-  const largeImage = event.target.dataset.source;
+    const largeImage = event.target.dataset.source;
+    const description = event.target.alt;
 
 instance = basicLightbox.create(`
-    <img src="${largeImage}" alt="${images.description}"
+    <img src="${largeImage}" alt="${description}"
     />`,
+{
+      onShow: () => {
+        document.addEventListener('keyup', closeImg);
+      },
+      
+      onClose: () => {
+        document.removeEventListener('keyup', closeImg);
+      },
+    }
   );
     instance.show();
-
-    document.addEventListener('keydown', closeModal);
-} 
+  } 
 };
 
-function closeModal(event) {
+function closeImg(event) {
   if (event.key === 'Escape') {
     instance.close();
-
-  document.removeEventListener('keydown', closeModal);
   }
 };
